@@ -8,10 +8,15 @@ KEEP IN MIND IT'S A WORKAROUND THAT I FOUND IN ORDER TO FIX MY DECK
 I'M NOT RESPONSIBLE FOR ANY DAMAGE YOU DO TO YOUR OWN DEVICE 
 PLEASE DON'T ATTEMPT THIS IF YOU DON'T UNDERSTAND IT 
 
+
+
 Prerequisits:
 You need a usb hub 
 Keybord 
 2 usbstiks or 1 usb and 1 sd card
+
+
+
 
 First you need a recovery image usb/sd card (does not matter if it can't boot from it as we are not booting form it)
 
@@ -61,6 +66,9 @@ If you use lsblk you will see that the partition is 20gb this issue is  do to th
 In order to fix this you will need to run the following command:
 
      btrfs filesystem resize max /
+     
+     
+     
 
 Modifications done to repair_device.sh 
 
