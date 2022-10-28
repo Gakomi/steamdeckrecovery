@@ -30,9 +30,13 @@ Once you boot in to the livemedia mount the recovery usb and all the partitions 
 
 For the script to work you need steamos-chroot 
 
-To install it after you mounted the recovery usb run install-steamos-chroot.sh by using command ./install-steamos-chroot.sh
+To install it after you mounted the recovery usb run install-steamos-chroot.sh by using command 
+     
+     ./install-steamos-chroot.sh
 
-After that run the recovery script you need in my case I wanted it restore to factory setting so I ran ./factory_reimage.sh
+After that run the recovery script you need in my case I wanted it restore to factory setting so I ran 
+     
+     ./factory_reimage.sh
 
 Modifications done to repair_device.sh 
 
