@@ -37,6 +37,30 @@ To install it after you mounted the recovery usb run install-steamos-chroot.sh b
 After that run the recovery script you need in my case I wanted it restore to factory setting so I ran 
      
      ./factory_reimage.sh
+     
+Once the script finishes running console will shutdown you need to power it on. 
+After it boots and you log in in to the syestem switch to desktop mode.
+In desktop mode enter terminal and add a password using command:
+
+      passwd
+
+After that Disable read-only mode: 
+
+     sudo btrfs property set -ts / ro false
+
+Initialize keys:
+
+     sudo pacman-key --init
+
+Populate keys: 
+
+     sudo pacman-key --populate archlinux
+     
+Once this is done if you use df -h you will see that the root partition has 5gb
+If you use lsblk you will see that the partition is 20gb this issue is  do to the fac that the filesystem is 5gb while the partition is 20gb
+In order to fix this you will need to run the following command:
+
+     btrfs filesystem resize max /
 
 Modifications done to repair_device.sh 
 
