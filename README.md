@@ -40,7 +40,21 @@ After that run the recovery script you need in my case I wanted it restore to fa
 
 Modifications done to repair_device.sh 
 
-line "rootdevice="$(findmnt -n -o source / )" from original script was changed to "rootdevice="$(findmnt -n -o source /run/media/liveuser/rootfs)" 
+Lines:
+
+    ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+    
+Was changed to
+ 
+    ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size= 20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+
+This changes was done as I think 5gb is not enough space for root (I think rootfs-b is used as a backup so I did not change it)
+
+    "rootdevice="$(findmnt -n -o source / )" 
+
+Was changed to 
+
+    "rootdevice="$(findmnt -n -o source /run/media/liveuser/rootfs)" 
 
 and the following lines were removed:
 
