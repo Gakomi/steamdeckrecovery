@@ -15,7 +15,7 @@ Keybord
 
 First you need a recovery image usb/sd card (does not matter if it can't boot from it as we are not booting form it)
 
-Second get a live media with holoiso 
+Second get a live media with holoiso ( you can get the image from here https://github.com/theVakhovskeIsTaken/holoiso)
 
 Get the recovery scripts from here (they are the same ones that are on the recovery image from valve, only repair_device.sh was modified)
 
