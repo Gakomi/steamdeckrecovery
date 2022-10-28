@@ -20,11 +20,11 @@ Second get a live media with holoiso ( you can get the image from here https://g
 Get the recovery scripts from here (they are the same ones that are on the recovery image from valve, only repair_device.sh was modified) 
 by running the following commands the following:
 
-sudo pacman -Sy
-sudo pacman -S git
-git clone https://github.com/Gakomi/steamdeckrecovery.git
-sudo chmod 775 steamdeckrecovery/*
-cd steamdeckrecovery/
+    sudo pacman -Sy
+    sudo pacman -S git
+    git clone https://github.com/Gakomi/steamdeckrecovery.git
+    sudo chmod 775 steamdeckrecovery/*
+    cd steamdeckrecovery/
 
 Once you boot in to the livemedia mount the recovery usb and all the partitions on it.
 
@@ -38,13 +38,13 @@ Modifications done to repair_device.sh
 
 Lines:
 
-  ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
-  ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+    ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+    ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
   
 Were changed to:
 
-  ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
-  ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+    ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+    ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
   
 This was done as I think 5gb is not enough for root partition so I made it 20gb.(Fell free to change them back as this will take 30gb more of your disk spase)
 
