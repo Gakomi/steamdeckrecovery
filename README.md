@@ -21,10 +21,18 @@ Keybord,
 
 First you need a recovery image usb/sd card (does not matter if it can't boot from it as we are not booting form it)
 
-Second get a live media with holoiso ( you can get the image from here https://github.com/theVakhovskeIsTaken/holoiso)
+Second get a live media with holoiso ( you can get the image from here https://github.com/theVakhovskeIsTaken/holoiso) 
 
-Get the recovery scripts from here (they are the same ones that are on the recovery image from valve, only repair_device.sh was modified) 
-by running the following commands the following:
+ONCE YOU BOOT IN TO THE LIVE MEDIA MOUNT THE RECOVERY USB AND ALL THE PARTITIONS ON IT (if you do not do this it will not work).
+To do this just click mount for each one when the system detects the usb. 
+DO NOT MOUNT THEM ON SOME PLACE THAT YOU WANT AS THE SCRIPTS ASSUME THEY ARE MOUNTED ON THE DEFAULT PATH THAT STARTS WITH /run/media
+
+Get the recovery scripts from this repository (they are the same ones that are on the recovery image from valve, only repair_device.sh was modified).
+
+DON'T ASSUME RUNNING THE SCRIPTS FROM VALVE WILL WORK, rapair_device.sh NEEDS TO HAVE A FEW LINES CHANGED OR IT WILL NOT WORK
+I point them out at the end of this document
+
+To get the files run the following commands:
 
     sudo pacman -Sy
     sudo pacman -S git
@@ -32,20 +40,18 @@ by running the following commands the following:
     sudo chmod 775 steamdeckrecovery/*
     cd steamdeckrecovery/
 
-Once you boot in to the livemedia mount the recovery usb and all the partitions on it.
-
 For the script to work you need steamos-chroot 
 
 To install it after you mounted the recovery usb run install-steamos-chroot.sh by using command 
      
      ./install-steamos-chroot.sh
 
-After that run the recovery script you need in my case I wanted it restore to factory setting so I ran 
+After that run the recovery script you need in my case I wanted it restore to factory setting so I ran:
      
      ./factory_reimage.sh
      
-Once the script finishes running console will shutdown you need to power it on. 
-After it boots and you log in in to the syestem switch to desktop mode.
+Once the script finishes running the console will shutdown, you need to power it on. 
+After it boots and you log in to the syestem switch to desktop mode.
 In desktop mode enter terminal and add a password using command:
 
       passwd
@@ -53,6 +59,8 @@ In desktop mode enter terminal and add a password using command:
 After that Disable read-only mode: 
 
      sudo btrfs property set -ts / ro false
+     
+#if you don't intend to install packages through pacman the next two commands are unecesary
 
 Initialize keys:
 
@@ -66,9 +74,8 @@ Once this is done if you use df -h you will see that the root partition has 5gb
 If you use lsblk you will see that the partition is 20gb this issue is  do to the fac that the filesystem is 5gb while the partition is 20gb
 In order to fix this you will need to run the following command:
 
-     btrfs filesystem resize max /
-     
-     
+     sudo btrfs filesystem resize max /
+    
      
 
 Modifications done to repair_device.sh 
@@ -89,12 +96,14 @@ Was changed to
 
     "rootdevice="$(findmnt -n -o source /run/media/liveuser/rootfs)" 
 
-and the following lines were removed:
+This had to change or it would not detect the usb rootfs partition. 
+
+The following lines were removed:
 
     # Freeze our rootfs
     estat "Freezing rootfs"
     unfreeze() { fsfreeze -u /; }
     onexit+=(unfreeze)
-    cmd fsfreeze -f /
+    cmd fsfreeze -f /   
     
- As this step I found it's unecessary and the script would not work with it anyway.
+As this step I found it's unecessary and the script would not work with it anyway.
