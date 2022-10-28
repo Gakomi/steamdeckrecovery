@@ -2,7 +2,8 @@ DO NOT RUN THE SCRIPTS WITHOUT READING THIS AS YOU STILL NEED TO DO SOME THINGS 
 
 # This is for people that can't boot in to recovery media
 
-This is due to Valve making a recovery image that boots only when you are using some specific usb sticks or sd memory cards.
+I think this issue ocures due to Valve making a stupid bios (initially I thought it was just the recovery image grub not working correctly
+but I found out that this same issue happens with windows images too)
 
 KEEP IN MIND IT'S A WORKAROUND THAT I FOUND IN ORDER TO FIX MY DECK
 I'M NOT RESPONSIBLE FOR ANY DAMAGE YOU DO TO YOUR OWN DEVICE 
