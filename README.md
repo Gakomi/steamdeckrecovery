@@ -37,9 +37,12 @@ After that run the recovery script you need in my case I wanted it restore to fa
 Modifications done to repair_device.sh 
 
 Lines:
+
   ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
   ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+  
 Were changed to:
+
   ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
   ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
   
