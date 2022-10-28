@@ -22,8 +22,8 @@ readvar PARTITION_TABLE <<END_PARTITION_TABLE
   ${DISK}${DISK_SUFFIX}1: name="esp",      size=    64MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B
   ${DISK}${DISK_SUFFIX}2: name="efi-A",    size=    32MiB, type=EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
   ${DISK}${DISK_SUFFIX}3: name="efi-B",    size=    32MiB, type=EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
-  ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
-  ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+  ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+  ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
   ${DISK}${DISK_SUFFIX}6: name="var-A",    size=   256MiB, type=4D21B016-B534-45C2-A9FB-5C16E091FD2D
   ${DISK}${DISK_SUFFIX}7: name="var-B",    size=   256MiB, type=4D21B016-B534-45C2-A9FB-5C16E091FD2D
   ${DISK}${DISK_SUFFIX}8: name="home",                     type=933AC7E1-2EB4-4F13-B844-0E14E2AEF915
@@ -177,133 +177,7 @@ fi
 #
 repair_steps()
 {
-  if [[ $writePartitionTable = 1 ]]; then  echo "... sanitize done."
-302
-}
-303
-​
-304
-# print quick list of targets
-305
-#
-306
-help()
-307
-{
-308
-  readvar HELPMSG << EOD
-309
-This tool can be used to reinstall or repair your SteamOS installation on a Steam Deck.
-310
-​
-311
-Possible targets:
-312
-    all : permanently destroy all data on your Steam Deck, and reinstall SteamOS.
-313
-    system : reinstall SteamOS on the Steam Deck system partitions.
-314
-    home : remove games and personalization from the Steam Deck.
-315
-    chroot : chroot to the primary SteamOS partition set.
-316
-    sanitize : perform an NVME sanitize operation.
-317
-EOD
-318
-  emsg "$HELPMSG"
-319
-  if [[ "$EUID" -ne 0 ]]; then
-320
-    eerr "Please run as root."
-321
-    exit 1
-322
-  fi
-323
-}
-324
-​
-325
-[[ "$EUID" -ne 0 ]] && help
-326
-​
-327
-writePartitionTable=0
-328
-writeOS=0
-329
-writeHome=0
-330
-​
-331
-case "${1-help}" in
-332
-all)
-333
-  prompt_step "Reimage Steam Deck" "This action will reimage the Steam Deck.\nThis will permanently destroy all data on your Steam Deck and reinstall SteamOS.\n\nThis cannot be undone.\n\nChoose Proceed only if you wish to clear and reimage this device."
-334
-  writePartitionTable=1
-335
-  writeOS=1
-336
-  writeHome=1
-337
-  repair_steps
-338
-  prompt_reboot "Reimaging complete."
-339
-  ;;
-340
-system)
-341
-  prompt_step "Reinstall SteamOS" "This action will reinstall SteamOS on the Steam Deck, while attempting to preserve your games and personal content.\nSystem customizations may be lost.\n\nChoose Proceed to reinstall SteamOS on your device."
-342
-  writeOS=1
-343
-  repair_steps
-344
-  prompt_reboot "SteamOS reinstall complete."
-345
-  ;;
-346
-home)
-347
-  prompt_step "Delete local user data" "This action will reformat the home partitions on your Steam Deck.\nThis will destroy downloaded games and all personal content stored on the Deck, including system configuration.\n\nThis action cannot be undone.\n\nChoose Proceed to reformat all user home partitions."
-348
-  writeHome=1
-349
-  repair_steps
-350
-  prompt_reboot "User partitions have been reformatted."
-351
-  ;;
-352
-chroot)
-353
-  chroot_primary
-354
-  ;;
-355
-sanitize)
-356
-  prompt_step "Clear and sanitize NVME disk" "This action will kick off an NVME sanitize on the Steam Deck, irrevocably deleting all user data.\n\nThis action cannot be undone.\n\nChoose Proceed only if you want to remove all data from the attached Steam Deck primary drive."
-357
-  sanitize_all
-358
-  ;;
-359
-*)
-360
-  help
-361
-  ;;
-362
-esac 
-363
-​
-364
-
+  if [[ $writePartitionTable = 1 ]]; then
     estat "Write known partition table"
     echo "$PARTITION_TABLE" | sfdisk "$DISK"
 
@@ -337,7 +211,7 @@ esac
 
   if [[ $writeOS = 1 ]]; then
     # Find rootfs
-    rootdevice="$(findmnt -n -o source /run/media/liveuser/rootfs)"
+    rootdevice="$(findmnt -n -o source / )"
     if [[ -z $rootdevice || ! -e $rootdevice ]]; then
       eerr "Could not find USB installer root -- usb hub issue?"
       sleep infinity
@@ -349,6 +223,12 @@ esac
     fmt_fat32 esp  "$(diskpart $FS_ESP)"
     fmt_fat32 efi  "$(diskpart $FS_EFI_A)"
     fmt_fat32 efi  "$(diskpart $FS_EFI_B)"
+
+    # Freeze our rootfs
+    estat "Freezing rootfs"
+    unfreeze() { fsfreeze -u /; }
+    onexit+=(unfreeze)
+    cmd fsfreeze -f /
 
     estat "Imaging OS partition A"
     imageroot "$rootdevice" "$(diskpart $FS_ROOT_A)"
@@ -486,3 +366,4 @@ sanitize)
   help
   ;;
 esac 
+
