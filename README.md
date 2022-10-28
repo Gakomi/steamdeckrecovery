@@ -12,8 +12,8 @@ PLEASE DON'T ATTEMPT THIS IF YOU DON'T UNDERSTAND IT
 
 
 Prerequisits:
-You need a usb hub 
-Keybord 
+You need a usb hub, 
+Keybord, 
 2 usbstiks or 1 usb and 1 sd card
 
 
