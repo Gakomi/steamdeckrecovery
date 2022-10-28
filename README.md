@@ -17,17 +17,33 @@ First you need a recovery image usb/sd card (does not matter if it can't boot fr
 
 Second get a live media with holoiso ( you can get the image from here https://github.com/theVakhovskeIsTaken/holoiso)
 
-Get the recovery scripts from here (they are the same ones that are on the recovery image from valve, only repair_device.sh was modified)
+Get the recovery scripts from here (they are the same ones that are on the recovery image from valve, only repair_device.sh was modified) 
+by running the following commands the following:
+
+sudo pacman -Sy
+sudo pacman -S git
+git clone https://github.com/Gakomi/steamdeckrecovery.git
+sudo chmod 775 steamdeckrecovery/*
+cd steamdeckrecovery/
 
 Once you boot in to the livemedia mount the recovery usb and all the partitions on it.
-For the script to work you need steamos-chroot (as I did not find a way to install it I copied it from the recovery image directly)
-Go to recovery image rootfs partition and open a terminal (you can do this from gui or from terminal but you need to open a terminal in this partition)
-In terminal you will have to find all the files related to steamos-chroot to do this use command sudo find * | grep steamos-chroot
-This should show you 2 files copy them to the exact same path on your live media root, you need to use sudo in order to copy them 
-Steamos-chroot needs steamos-partitions-lib in order to work so you need to find it too same as before sudo find * | grep steamos-partitions-lib 
-Copy that too, now you should be all set for running the scripts (just run the one you need and it should work now).
+
+For the script to work you need steamos-chroot 
+
+To install it after you mounted the recovery usb run install-steamos-chroot.sh by using command ./install-steamos-chroot.sh
+
+After that run the recovery script you need in my case I wanted it restore to factory setting so I ran ./factory_reimage.sh
 
 Modifications done to repair_device.sh 
+
+Lines:
+  ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+  ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+Were changed to:
+  ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+  ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+  
+This was done as I think 5gb is not enough for root partition so I made it 20gb.(Fell free to change them back as this will take 30gb more of your disk spase)
 
 line "rootdevice="$(findmnt -n -o source / )" from original script was changed to "rootdevice="$(findmnt -n -o source /run/media/liveuser/rootfs)" 
 
