@@ -9,6 +9,7 @@
 
 #Install steamos-chroot manually 
 #copy steamos-partitions-lib
+sudo mkdir /usr/lib/steamos
 FILE_LIB="$(sudo find /run/media/* | grep steamos-partitions-lib)"
 sudo cp "$FILE_LIB" /usr/lib/steamos/steamos-partitions-lib
 #copy steamos-chroot
