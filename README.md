@@ -37,7 +37,7 @@ To get the files run the following commands:
     sudo pacman -Sy
     sudo pacman -S git
     git clone https://github.com/Gakomi/steamdeckrecovery.git
-    sudo chmod 775 steamdeckrecovery/*
+    sudo chmod 775 steamdeckrecovery-main/*
     cd steamdeckrecovery/
 
 For the script to work you need steamos-chroot 
