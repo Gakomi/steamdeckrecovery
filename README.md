@@ -33,7 +33,7 @@ DON'T ASSUME RUNNING THE SCRIPTS FROM VALVE WILL WORK, rapair_device.sh NEEDS TO
 I point them out at the end of this document
 
     git clone https://github.com/Gakomi/steamdeckrecovery.git
-    sudo chmod 775 steamdeckrecovery-main/*
+    sudo chmod 775 steamdeckrecovery/*
     cd steamdeckrecovery/
 
 For the script to work you need steamos-chroot 
