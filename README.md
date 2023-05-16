@@ -32,6 +32,31 @@ Get the recovery scripts from this repository (they are the same ones that are o
 DON'T ASSUME RUNNING THE SCRIPTS FROM VALVE WILL WORK, rapair_device.sh NEEDS TO HAVE A FEW LINES CHANGED OR IT WILL NOT WORK
 I point them out at the end of this document
 
+Before we start on holo-os live image you need edit pacman.conf as the repos are outdated:
+    sudo vim /etc/pacman.conf
+    
+Inside the file go to the end and there you will see the repos, change the following:
+    [holoiso]
+    [jupiter]
+    [holo]
+    [core]
+    [extra]
+    [community]
+    [multilib]
+To:
+    [holoiso-stable]
+    [jupiter-staging]
+    [holo-staging]
+    [core-staging]
+    [extra-staging]
+    [community-staging]
+    [multilib-staging]
+And remove or add # in front of the:
+    [holostaging]
+    Include = /etc/pacman.d/holo_mirrorlist
+    SigLevel = Never
+As the holostaging repo is not needed anymore.
+
 To get the files run the following commands:
 
     sudo pacman -Sy
