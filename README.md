@@ -38,7 +38,7 @@ I point them out at the end of this document
 
 For the script to work you need steamos-chroot 
 
-To install it after you mounted the recovery usb run install-steamos-chroot.sh by using command 
+To install it you need first to mount the recovery usb rootfs partition run install-steamos-chroot.sh by using command 
      
      ./install-steamos-chroot.sh
 
