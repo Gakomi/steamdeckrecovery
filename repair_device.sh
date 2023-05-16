@@ -21,16 +21,22 @@ readvar PARTITION_TABLE <<END_PARTITION_TABLE
   label: gpt
   ${DISK}${DISK_SUFFIX}1: name="esp",      size=    64MiB, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B
   ${DISK}${DISK_SUFFIX}2: name="efi-A",    size=    32MiB, type=EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
+  ${DISK}${DISK_SUFFIX}3: name="efi-B",    size=    32MiB, type=EBD0A0A2-B9E5-4433-87C0-68B6B72699C7
   ${DISK}${DISK_SUFFIX}4: name="rootfs-A", size= 20480MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
+  ${DISK}${DISK_SUFFIX}5: name="rootfs-B", size=  5120MiB, type=4F68BCE3-E8CD-4DB1-96E7-FBCAF984B709
   ${DISK}${DISK_SUFFIX}6: name="var-A",    size=   256MiB, type=4D21B016-B534-45C2-A9FB-5C16E091FD2D
+  ${DISK}${DISK_SUFFIX}7: name="var-B",    size=   256MiB, type=4D21B016-B534-45C2-A9FB-5C16E091FD2D
   ${DISK}${DISK_SUFFIX}8: name="home",                     type=933AC7E1-2EB4-4F13-B844-0E14E2AEF915
 END_PARTITION_TABLE
 
 # Partition numbers on ideal target device, by index
 FS_ESP=1
 FS_EFI_A=2
+FS_EFI_B=3
 FS_ROOT_A=4
+FS_ROOT_B=5
 FS_VAR_A=6
+FS_VAR_B=7
 FS_HOME=8
 
 diskpart() { echo "$DISK$DISK_SUFFIX$1"; }
@@ -182,7 +188,9 @@ repair_steps()
     # are unlabelled anyway
     verifypart "$(diskpart $FS_ESP)" vfat esp
     verifypart "$(diskpart $FS_EFI_A)" vfat efi-A
+    verifypart "$(diskpart $FS_EFI_B)" vfat efi-B
     verifypart "$(diskpart $FS_VAR_A)" ext4 var-A
+    verifypart "$(diskpart $FS_VAR_B)" ext4 var-B
     verifypart "$(diskpart $FS_HOME)" ext4 home
   fi
 
@@ -191,6 +199,7 @@ repair_steps()
   if [[ $writeOS = 1 || $writeHome = 1 ]]; then
     estat "Creating var partitions"
     fmt_ext4  var  "$(diskpart $FS_VAR_A)"
+    fmt_ext4  var  "$(diskpart $FS_VAR_B)"
   fi
 
   if [[ $writeHome = 1 ]]; then
@@ -213,12 +222,17 @@ repair_steps()
     estat "Creating boot partitions"
     fmt_fat32 esp  "$(diskpart $FS_ESP)"
     fmt_fat32 efi  "$(diskpart $FS_EFI_A)"
+    fmt_fat32 efi  "$(diskpart $FS_EFI_B)"
 
     estat "Imaging OS partition A"
     imageroot "$rootdevice" "$(diskpart $FS_ROOT_A)"
   
+    estat "Imaging OS partition B"
+    imageroot "$rootdevice" "$(diskpart $FS_ROOT_B)"
+  
     estat "Finalizing boot configurations"
     finalize_part A
+    finalize_part B
     estat "Finalizing EFI system partition"
     cmd steamos-chroot --disk "$DISK" --partset A -- steamcl-install --flags restricted --force-extra-removable
   fi
